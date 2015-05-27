@@ -33,7 +33,8 @@ SynchDisk   *synchDisk;
 #endif
 
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
-Machine *machine;	// user program memory and registers
+Machine *machine;		
+BitMap* MiMapa;			// user program memory and registers
 #endif
 
 #ifdef NETWORK
@@ -178,6 +179,7 @@ Initialize(int argc, char **argv)
     
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
+    MiMapa = new BitMap(32);
 #endif
 
 #ifdef FILESYS
@@ -212,6 +214,7 @@ Cleanup()
     
 #ifdef USER_PROGRAM
     delete machine;
+    delete MiMapa;
 #endif
 
 #ifdef FILESYS_NEEDED

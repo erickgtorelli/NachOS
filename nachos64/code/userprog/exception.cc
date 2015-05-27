@@ -220,6 +220,7 @@ void Nachos_Write() {                   // System call 7
 			}else{
 				
 				machine->WriteRegister(2,error);
+
 			}
 
 			
@@ -324,7 +325,9 @@ void Nachos_Read(){
 	
 }
 
-
+void Nachos_Exit(){
+		
+}
 
 void ExceptionHandler(ExceptionType which)
 {
@@ -349,6 +352,9 @@ void ExceptionHandler(ExceptionType which)
              case SC_Write:
                 Nachos_Write();             // System call # 7
                 break;
+	     case SC_Exit:
+		Nachos_Exit();
+		break;
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);

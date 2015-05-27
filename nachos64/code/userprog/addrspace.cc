@@ -82,11 +82,22 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
+	MiMapa->Mark(0);	
+	MiMapa->Mark(2);
+	MiMapa->Mark(4);
+	MiMapa->Mark(6);
+	MiMapa->Mark(8);
+	MiMapa->Mark(10);
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
+	int freePage;
+	
     for (i = 0; i < numPages; i++) {
-	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = i;
+	
+	pageTable[i].virtualPage = i;
+	freePage = MiMapa->Find();
+	pageTable[i].physicalPage = freePage;
+	printf("Free Page %d",freePage);
 	pageTable[i].valid = true;
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
@@ -100,18 +111,14 @@ AddrSpace::AddrSpace(OpenFile *executable)
     bzero(machine->mainMemory, size);
 
 // then, copy in the code and data segments into memory
-    if (noffH.code.size > 0) {
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
-			noffH.code.virtualAddr, noffH.code.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
-			noffH.code.size, noffH.code.inFileAddr);
-    }
-    if (noffH.initData.size > 0) {
-        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
-			noffH.initData.virtualAddr, noffH.initData.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
-			noffH.initData.size, noffH.initData.inFileAddr);
-    }
+    
+
+	for(unsigned int i = 0;i<numPages;i++){
+		int page = pageTable[i].physicalPage;
+		executable->ReadAt(&(machine->mainMemory[page]),128, i*128);
+	}
+        
+   
 
 }
 
@@ -122,6 +129,10 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 AddrSpace::~AddrSpace()
 {
+   for(unsigned int i = 0; i< numPages;i++){
+		MiMapa->Clear(pageTable[i].physicalPage);
+		printf("Clear %d",i);
+	}
    delete pageTable;
 }
 

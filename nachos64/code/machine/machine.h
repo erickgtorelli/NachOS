@@ -44,7 +44,7 @@ enum ExceptionType { NoException,           // Everything ok!
 		     BusErrorException,     // Translation resulted in an 
 					    // invalid physical address
 		     AddressErrorException, // Unaligned reference or one that
-					    // was beyond the end of the
+					    // was beyond the end of the 
 					    // address space
 		     OverflowException,     // Integer overflow in add or sub.
 		     IllegalInstrException, // Unimplemented or reserved instr.

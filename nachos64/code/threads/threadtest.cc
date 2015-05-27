@@ -14,6 +14,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "dinningph.h"
+#include "../bin/noff.h"
  
 
 DinningPh * dp;
@@ -87,11 +88,14 @@ SimpleThread(void* name)
 void
 ThreadTest()
 {
+	NoffHeader header;
+	printf("Tamaño del header %d \n", sizeof(header));
+/*
     Thread * Ph;
 
     DEBUG('t', "Entering SimpleTest");
 
-/*
+
     dp = new DinningPh();
 
     for ( long k = 0; k < 5; k++ ) {
@@ -100,7 +104,7 @@ ThreadTest()
     }
 
     return;
-*/
+
 
     for ( int k=1; k<=5; k++) {
       char* threadname = new char[100];
@@ -110,5 +114,6 @@ ThreadTest()
     }
     
     SimpleThread( (void*)"Hilo 0");
+*/
 }
 
