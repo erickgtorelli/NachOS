@@ -1,0 +1,1 @@
+Este texto pasó del archivo algo.txt a la consola.
