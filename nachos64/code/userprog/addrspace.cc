@@ -82,22 +82,18 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
-	MiMapa->Mark(0);	
-	MiMapa->Mark(2);
-	MiMapa->Mark(4);
-	MiMapa->Mark(6);
-	MiMapa->Mark(8);
-	MiMapa->Mark(10);
+
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
 	int freePage;
-	
+
+
     for (i = 0; i < numPages; i++) {
 	
 	pageTable[i].virtualPage = i;
 	freePage = MiMapa->Find();
 	pageTable[i].physicalPage = freePage;
-	printf("Free Page %d",freePage);
+	//printf("Free Page %d \n",freePage);
 	pageTable[i].valid = true;
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
@@ -111,14 +107,19 @@ AddrSpace::AddrSpace(OpenFile *executable)
     bzero(machine->mainMemory, size);
 
 // then, copy in the code and data segments into memory
-    
 
-	for(unsigned int i = 0;i<numPages;i++){
-		int page = pageTable[i].physicalPage;
-		executable->ReadAt(&(machine->mainMemory[page]),128, i*128);
+
+	for(unsigned int j = 0;j<numPages;j++){
+		int page = pageTable[j].physicalPage;
+		executable->ReadAt(&(machine->mainMemory[128 * page]),
+				   128, noffH.code.inFileAddr + j * 128);
+
 	}
-        
-   
+
+
+
+
+
 
 }
 
