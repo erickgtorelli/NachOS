@@ -6,7 +6,7 @@ class NachosOpenFilesTable {
     NachosOpenFilesTable();       // Initialize 
     ~NachosOpenFilesTable();      // De-allocate
     
-    int Open( int UnixHandle ); // Register the file handle
+	int Open( int UnixHandle ); // Register the file handle
     int Close( int NachosHandle );      // Unregister the file handle
     bool isOpened( int NachosHandle );
     int getUnixHandle( int NachosHandle );

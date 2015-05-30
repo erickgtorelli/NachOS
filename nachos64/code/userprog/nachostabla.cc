@@ -20,8 +20,9 @@ int NachosOpenFilesTable::Open( int UnixHandle ){
 }
 
  int NachosOpenFilesTable::Close( int NachosHandle ){
-	openFilesMap->Clear(NachosHandle);
-	return 0;
+	openFiles[NachosHandle];
+	 openFilesMap->Clear(NachosHandle);
+	return openFiles[NachosHandle];;
 }
 
 bool NachosOpenFilesTable::isOpened( int NachosHandle ){
