@@ -69,6 +69,25 @@ void returnFromSystemCall() {
 
 }       // returnFromSystemCall
 
+
+char * ReadFromNachosMemory(int virtualmemory){
+	char* string = new char[100];
+	
+	int fin = '\0';
+	int value = 0;
+	int posicion = 0;
+	//Read Name File
+	do{
+		machine->ReadMem(virtualmemory+posicion,1,&value);
+		*(string + posicion) = value;
+		posicion++;
+	}while(value != fin);
+
+	*(string + posicion) ='\0';
+	
+	return string;
+}
+
 void Nachos_Halt() {                    // System call 0
 
         DEBUG('a', "Shutdown, initiated by user program.\n");
