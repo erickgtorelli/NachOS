@@ -338,7 +338,7 @@ void Nachos_Exit(){
 void Nachos_Close(){
 	
 	int NachosHandle = machine->ReadRegister(4);
-	printf("Cerrando el archivo %c \n",NachosHandle);
+	printf("Cerrando el archivo %d \n",NachosHandle);
 	if(openedFiles->isOpened(NachosHandle)){
 		int UnixHandle = openedFiles->Close(NachosHandle-3);
 		machine->WriteRegister(2,close(UnixHandle));

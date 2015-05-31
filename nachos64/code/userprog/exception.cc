@@ -114,23 +114,6 @@ void Nachos_Create() {                    // System call 4
 
 }       // Nachos_Create
 
-char * ReadFromNachosMemory(int virtualmemory){
-	char* string = new char[100];
-	
-	int fin = '\0';
-	int value = 0;
-	int posicion = 0;
-	//Read Name File
-	do{
-		machine->ReadMem(virtualmemory+posicion,1,&value);
-		*(string + posicion) = value;
-		posicion++;
-	}while(value != fin);
-
-	*(string + posicion) ='\0';
-	
-	return string;
-}
 
 void Nachos_Open() {                    // System call 5
 /* System call definition described to user
@@ -142,8 +125,19 @@ void Nachos_Open() {                    // System call 5
 	// Use NachosOpenFilesTable class to create a relationship
 	// between user file and unix file
 	// Verify for errors
+	char buffer[100];
 	int nameNachos = machine->ReadRegister(4);
-	char* buffer  = ReadFromNachosMemory(nameNachos);
+	int fin = '\0';
+	int value = 0;
+	int posicion = 0;
+	//Read Name File
+	do{
+		machine->ReadMem(nameNachos+posicion,1,&value);
+		buffer[posicion] = value;
+		posicion++;
+	}while(value != fin);
+
+	buffer[posicion]='\0';
 	int UnixHandel = open((const char *)buffer,O_RDWR);
 	if(UnixHandel != -1){
 		int NachosHandle = openedFiles->Open(UnixHandel);
@@ -226,7 +220,6 @@ void Nachos_Write() {                   // System call 7
 			}else{
 				
 				machine->WriteRegister(2,error);
-
 			}
 
 			
@@ -243,7 +236,6 @@ void Nachos_Write() {                   // System call 7
 	// Console->V();
 
         returnFromSystemCall();		// Update the PC registers
-
 
 }       // Nachos_Write
 
@@ -311,7 +303,6 @@ void Nachos_Read(){
 			}else{
 				
 				machine->WriteRegister(2,error);
-
 			}
 
 			
@@ -347,6 +338,39 @@ void Nachos_Close(){
 	 returnFromSystemCall();
 }
 
+void Nachos_SemCreate(){
+	
+	int valorInicial= machine->ReadRegister(5);
+	int nombre = machine->ReadRegister(4);
+        char buffer[100];
+	int nameNachos = machine->ReadRegister(4);
+	int fin = '\0';
+	int value = 0;
+	int posicion = 0;
+	do{
+		machine->ReadMem(nombre+posicion,1,&value);
+		buffer[posicion] = value;
+		posicion++;
+	}while(value != fin);
+	buffer[posicion]=fin;
+	Semaphore * semActual = new Semaphore(buffer, valorInicial);
+        int espacio = controlSem->Find();
+	vectorSem[espacio] = semActual;
+	controlSem->Mark(espacio);
+	machine->WriteRegister(2,espacio);
+	printf("Semaforo creado\n");
+}
+
+void Nachos_SemDestroy(){
+	
+	int id = machine->ReadRegister(4);
+	delete vectorSem[id];
+	controlSem->Clear(id);
+	printf("Destruccion de semaforos");
+}
+
+
+
 void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);	
@@ -368,12 +392,17 @@ void ExceptionHandler(ExceptionType which)
              case SC_Write:
                 Nachos_Write();             // System call # 7
                 break;
+	     case SC_SemCreate:		    // System call # 11
+		Nachos_SemCreate();
+		break;
 	     case SC_Exit:
 		Nachos_Exit();
 		break;
 	     case SC_Close:		//System call # 8
 	     	Nachos_Close();
 	     	break;
+	     case SC_SemDestroy:
+		Nachos_SemDestroy();
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);

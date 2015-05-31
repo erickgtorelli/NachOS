@@ -19,6 +19,9 @@ Interrupt *interrupt;			// interrupt status
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
+
+Semaphore **vectorSem;
+BitMap *controlSem;
 					
 // 2007, Jose Miguel Santos Espino
 PreemptiveScheduler* preemptiveScheduler = NULL;
@@ -88,6 +91,8 @@ Initialize(int argc, char **argv)
     int argCount;
     const char* debugArgs = "";
     bool randomYield = false;
+    controlSem = new BitMap(CANTSEMAFOROS);
+    vectorSem = new Semaphore*[CANTSEMAFOROS];
     
 
 // 2007, Jose Miguel Santos Espino
