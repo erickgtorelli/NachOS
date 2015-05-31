@@ -146,6 +146,7 @@ void Nachos_Open() {                    // System call 5
 	// Verify for errors
 	char buffer[100];
 	int nameNachos = machine->ReadRegister(4);
+	char* buffer  = ReadFromNachosMemory(nameNachos);
 	int fin = '\0';
 	int value = 0;
 	int posicion = 0;
