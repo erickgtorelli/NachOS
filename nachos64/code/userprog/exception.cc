@@ -49,7 +49,8 @@
 //
 //	The result of the system call, if any, must be put back into r2. 
 //
-// And don't forget to increment the pc before returning. (Or else you'll
+// And don't forget to increment the pc before returning. (Or else you'lltranslation 
+
 // loop making the same system call forever!
 //
 //	"which" is the kind of exception.  The list of possible exceptions 
@@ -144,20 +145,11 @@ void Nachos_Open() {                    // System call 5
 	// Use NachosOpenFilesTable class to create a relationship
 	// between user file and unix file
 	// Verify for errors
-	char buffer[100];
-	int nameNachos = machine->ReadRegister(4);
-	char* buffer  = ReadFromNachosMemory(nameNachos);
-	int fin = '\0';
-	int value = 0;
-	int posicion = 0;
-	//Read Name File
-	do{
-		machine->ReadMem(nameNachos+posicion,1,&value);
-		buffer[posicion] = value;
-		posicion++;
-	}while(value != fin);
 
-	buffer[posicion]='\0';
+	int nameNachos = machine->ReadRegister(4);
+	
+	
+	char* buffer  = ReadFromNachosMemory(nameNachos);
 	int UnixHandel = open((const char *)buffer,O_RDWR);
 	if(UnixHandel != -1){
 		int NachosHandle = openedFiles->Open(UnixHandel);
@@ -343,7 +335,7 @@ void Nachos_Read(){
 }
 
 void Nachos_Exit(){
-		
+	currentThread->Finish();	
 }
 
 void Nachos_Close(){
@@ -363,7 +355,6 @@ void Nachos_SemCreate(){
 	int valorInicial= machine->ReadRegister(5);
 	int nombre = machine->ReadRegister(4);
         char buffer[100];
-	int nameNachos = machine->ReadRegister(4);
 	int fin = '\0';
 	int value = 0;
 	int posicion = 0;
@@ -389,7 +380,54 @@ void Nachos_SemDestroy(){
 	printf("Destruccion de semaforos");
 }
 
+void NachosForkThread( void * p ) { // for 64 bits version
+ 	   DEBUG('j', "NachosForkThread");
+    AddrSpace *space;
 
+    space = currentThread->space;
+    space->InitRegisters();             // set the initial register values
+    space->RestoreState();              // load page table register
+
+// Set the return address for this thread to the same as the main thread
+// This will lead this thread to call the exit system call and finish
+    machine->WriteRegister(RetAddrReg, 4 );
+   int x = *((int*)(&p));
+    machine->WriteRegister( PCReg, (long) p );
+    machine->WriteRegister( NextPCReg, x + 4 );
+
+    machine->Run();                     // jump to the user progam
+    ASSERT(false);
+
+}
+
+
+void Nachos_Fork() {			// System call 9
+
+	DEBUG( 'u', "Entering Fork System call\n" );
+	// We need to create a new kernel thread to execute the user thread
+	Thread * newT = new Thread( "child to execute Fork code" );
+
+	// We need to share the Open File Table structure with this new child
+	
+	// Child and father will also share the same address space, except for the stack
+	// Text, init data and uninit data are shared, a new stack area must be created
+	// for the new child
+	// We suggest the use of a new constructor in AddrSpace class,
+	// This new constructor will copy the shared segments (space variable) from currentThread, passed
+	// as a parameter, and create a new stack for the new child
+	newT->space = new AddrSpace( currentThread->space );
+            DEBUG('j', "Constructor Terminado\n");
+					
+	// We (kernel)-Fork to a new method to execute the child code
+	// Pass the user routine address, now in register 4, as a parameter
+	// Note: in 64 bits register 4 need to be casted to (void *)
+	DEBUG('j', "Registro 4  %d \n ",machine->ReadRegister( 4 ));
+	newT->Fork( NachosForkThread,(void*) machine->ReadRegister( 4 ) );
+	currentThread->Yield();
+	returnFromSystemCall();	// This adjust the PrevPC, PC, and NextPC registers
+
+	DEBUG( 'u', "Exiting Fork System call\n" );
+}	
 
 void ExceptionHandler(ExceptionType which)
 {
@@ -423,6 +461,9 @@ void ExceptionHandler(ExceptionType which)
 	     	break;
 	     case SC_SemDestroy:
 		Nachos_SemDestroy();
+	     case SC_Fork:
+		Nachos_Fork();
+		break;
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);

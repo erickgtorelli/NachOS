@@ -42,6 +42,58 @@ SwapHeader (NoffHeader *noffH)
 	noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
 
+unsigned int AddrSpace::getNumPages(){
+	return numPages;
+}
+
+TranslationEntry* AddrSpace::getPageTable(){
+	return pageTable;
+}
+
+
+AddrSpace::AddrSpace(AddrSpace* space){
+ 	numPages = space->getNumPages();
+
+// first, set up the translation 
+    pageTable = new TranslationEntry[numPages];
+	int freePage;
+	unsigned int i;
+    TranslationEntry* pageTableFather = space->getPageTable();
+	
+	   DEBUG('j', "Initializing address space, num pages %d, size %d\n", 
+					numPages, UserStackSize);
+    for (i = 0; i < numPages - 8; i++) {
+	pageTable[i].virtualPage = i;
+	pageTable[i].physicalPage = pageTableFather[i].physicalPage;
+	pageTable[i].valid = true;
+	pageTable[i].use = false;
+	pageTable[i].dirty = false;
+	pageTable[i].readOnly = false;  // if the code segment was entirely on 
+					// a separate page, we could set its 
+					// pages to be read-only
+    }
+
+  for( i; i< numPages;i++){
+	pageTable[i].virtualPage = i;
+	freePage = MiMapa->Find();
+	pageTable[i].valid = true;
+	pageTable[i].use = false;
+	pageTable[i].dirty = false;
+	pageTable[i].readOnly = false; 
+	if(-1 != freePage){
+		pageTable[i].physicalPage = freePage;
+		//printf("Free Page %d \n",freePage);
+		 // if the code segment was entirely on 				
+		bzero((void*)&machine->mainMemory[128 * pageTable[i].physicalPage], 128);
+	}
+	}
+    
+// zero out the entire address space, to zero the unitialized data segment 
+// and the stack segment
+ 
+// then, copy in the code and data segments into memory
+
+}
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
 // 	Create an address space to run a user program.
@@ -80,7 +132,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 						// at least until we have
 						// virtual memory
 
-    DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
+    DEBUG('j', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
 
 // first, set up the translation 
