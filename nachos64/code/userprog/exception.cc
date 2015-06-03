@@ -28,7 +28,7 @@
 #include <sys/types.h>
        #include <sys/stat.h>
        #include <fcntl.h>
-#include "nachostabla.h"
+
 #include "translate.h"
 #include <fcntl.h>
 
@@ -56,7 +56,7 @@
 //	"which" is the kind of exception.  The list of possible exceptions 
 //	are in machine.h.
 //----------------------------------------------------------------------
-NachosOpenFilesTable* openedFiles = new NachosOpenFilesTable();
+
 
 void returnFromSystemCall() {
 
@@ -120,7 +120,7 @@ void Nachos_Create() {                    // System call 4
 	buffer[posicion]=fin;
 	int UnixHandel = creat("PruebaWrite.txt", 0777);
 	if(UnixHandel != -1){
-		int NachosHandle = openedFiles->Open(UnixHandel);
+		int NachosHandle = currentThread->openedFiles->Open(UnixHandel);
 		machine->WriteRegister( 2, NachosHandle + 3); 
 		printf("Se creó el archivo\n");
 	}
@@ -152,9 +152,9 @@ void Nachos_Open() {                    // System call 5
 	char* buffer  = ReadFromNachosMemory(nameNachos);
 	int UnixHandel = open((const char *)buffer,O_RDWR);
 	if(UnixHandel != -1){
-		int NachosHandle = openedFiles->Open(UnixHandel);
+		int NachosHandle = currentThread->openedFiles->Open(UnixHandel);
 		machine->WriteRegister( 2, NachosHandle + 3); 
-		printf("Se abrio el archivo\n");
+		DEBUG('j',"Se abrio el archivo\n");
 	}
 	else{
 		perror("Error al abrir el archivo\n");	
@@ -215,8 +215,8 @@ void Nachos_Write() {                   // System call 7
 			printf( "%d\n", machine->ReadRegister( 4 ) );
 		 	break;
 		default:
-			if(openedFiles->isOpened(id-3)){
-				Unix = openedFiles->getUnixHandle(id-3);
+			if(currentThread->openedFiles->isOpened(id-3)){
+				Unix = currentThread->openedFiles->getUnixHandle(id-3);
 			        fin = '\0';
 			        value = 0;
 			        posicion=0;
@@ -297,8 +297,8 @@ void Nachos_Read(){
 		 	break;
 		default:
 			
-			if(openedFiles->isOpened(id-3)){
-				Unix = openedFiles->getUnixHandle(id-3);
+			if(currentThread->openedFiles->isOpened(id-3)){
+				Unix = currentThread->openedFiles->getUnixHandle(id-3);
 				bytes = read(Unix,(void*)buffer,size);
 			        fin = '\0';
 			        value = 0;
@@ -341,9 +341,9 @@ void Nachos_Exit(){
 void Nachos_Close(){
 	
 	int NachosHandle = machine->ReadRegister(4);
-	printf("Cerrando el archivo %d \n",NachosHandle);
-	if(openedFiles->isOpened(NachosHandle)){
-		int UnixHandle = openedFiles->Close(NachosHandle-3);
+	DEBUG('j',"Cerrando el archivo %d \n",NachosHandle);
+	if(currentThread->openedFiles->isOpened(NachosHandle)){
+		int UnixHandle = currentThread->openedFiles->Close(NachosHandle-3);
 		machine->WriteRegister(2,close(UnixHandle));
 	}
 

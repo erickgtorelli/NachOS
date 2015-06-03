@@ -39,10 +39,11 @@
 
 #include "copyright.h"
 #include "utility.h"
-
+#include "../userprog/nachostabla.h"
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
+
 #endif
 
 // CPU register state to be saved on context switch.  
@@ -76,7 +77,6 @@ class Thread {
     // THEY MUST be in this position for SWITCH to work.
     HostMemoryAddress* stackTop;			// the current stack pointer
     HostMemoryAddress machineState[MachineStateSize];	// all registers except for stackTop
-
   public:
     Thread(const char* debugName);	// initialize a Thread 
     ~Thread(); 				// deallocate a Thread
@@ -92,7 +92,7 @@ class Thread {
     void Sleep();  				// Put the thread to sleep and 
 						// relinquish the processor
     void Finish();  				// The thread is done executing
-    
+    NachosOpenFilesTable* openedFiles;
     void CheckOverflow();   			// Check if thread has 
 						// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }
@@ -122,7 +122,7 @@ class Thread {
   public:
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
-
+	
     AddrSpace *space;			// User code this thread is running.
 #endif
 };

@@ -47,11 +47,12 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/string.h ../threads/system.h ../threads/thread.h \
- ../machine/machine.h ../threads/utility.h ../machine/translate.h \
- ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
  ../threads/synch.h
 scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/scheduler.h ../threads/list.h \
@@ -73,12 +74,13 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/system.h ../machine/interrupt.h ../threads/list.h \
- ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../threads/synch.h
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/system.h \
+ ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../machine/timer.h ../userprog/bitmap.h ../threads/synch.h
 synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/synch.h ../threads/thread.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -99,12 +101,13 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/list.h \
- ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h
+ /usr/include/string.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../threads/utility.h \
+ ../filesys/openfile.h ../machine/machine.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/list.h ../threads/system.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h
 system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/utility.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdlib.h \
@@ -125,13 +128,14 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h \
- ../threads/preemptive.h
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
+ ../threads/synch.h ../threads/preemptive.h
 thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/thread.h ../threads/utility.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdlib.h \
@@ -152,13 +156,14 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/switch.h \
- ../threads/synch.h ../threads/list.h ../threads/system.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
- ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
- ../filesys/openfile.h
+ /usr/include/string.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../threads/utility.h \
+ ../filesys/openfile.h ../machine/machine.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/switch.h ../threads/synch.h \
+ ../threads/list.h ../threads/system.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../machine/timer.h ../userprog/bitmap.h
 utility.o: ../threads/utility.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
  ../threads/copyright.h /usr/include/stdlib.h /usr/include/features.h \
@@ -201,13 +206,14 @@ threadtest.o: ../threads/threadtest.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h \
- ../threads/dinningph.h ../threads/../bin/noff.h
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
+ ../threads/synch.h ../threads/dinningph.h ../threads/../bin/noff.h
 dinningph.o: ../threads/dinningph.cc /usr/include/stdc-predef.h \
  ../threads/dinningph.h ../threads/synch.h ../threads/copyright.h \
  ../threads/thread.h ../threads/utility.h ../machine/sysdep.h \
@@ -228,9 +234,11 @@ dinningph.o: ../threads/dinningph.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/list.h
+ /usr/include/string.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../threads/utility.h \
+ ../filesys/openfile.h ../machine/machine.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/list.h
 interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/interrupt.h ../threads/list.h \
  ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
@@ -252,11 +260,12 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/string.h ../threads/system.h ../threads/thread.h \
- ../machine/machine.h ../threads/utility.h ../machine/translate.h \
- ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
- ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
+ ../machine/timer.h ../userprog/bitmap.h ../threads/synch.h
 sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
@@ -294,12 +303,13 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  /usr/include/alloca.h /usr/include/bits/stdlib-float.h \
  ../machine/interrupt.h ../threads/list.h ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/system.h \
- ../threads/thread.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
- ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
- ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../threads/synch.h
+ ../threads/thread.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../threads/utility.h \
+ ../filesys/openfile.h ../machine/machine.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+ ../userprog/bitmap.h ../threads/synch.h
 stats.o: ../machine/stats.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
@@ -341,12 +351,13 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/string.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../threads/synch.h
+ ../threads/thread.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../filesys/openfile.h \
+ ../machine/machine.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h \
+ ../userprog/bitmap.h ../threads/synch.h
 preemptive.o: ../threads/preemptive.cc /usr/include/stdc-predef.h \
  ../threads/preemptive.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -367,13 +378,14 @@ preemptive.o: ../threads/preemptive.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
+ ../threads/synch.h /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/confname.h \
  /usr/include/getopt.h /usr/include/sys/ptrace.h /usr/include/sys/wait.h \
  /usr/include/signal.h /usr/include/bits/signum.h \
@@ -401,13 +413,14 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h \
- ../userprog/addrspace.h ../bin/noff.h
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
+ ../threads/synch.h ../userprog/addrspace.h ../bin/noff.h
 bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../userprog/bitmap.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -449,13 +462,14 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h \
- ../userprog/syscall.h /usr/include/unistd.h \
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
+ ../threads/synch.h ../userprog/syscall.h /usr/include/unistd.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
  /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/sys/stat.h /usr/include/bits/stat.h /usr/include/fcntl.h \
@@ -482,13 +496,15 @@ progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/string.h ../threads/thread.h ../machine/machine.h \
- ../threads/utility.h ../machine/translate.h ../machine/disk.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/bitmap.h ../filesys/openfile.h ../threads/synch.h \
- ../machine/console.h ../userprog/addrspace.h ../threads/synch.h
+ /usr/include/string.h ../threads/thread.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../threads/utility.h ../filesys/openfile.h ../machine/machine.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
+ ../threads/synch.h ../machine/console.h ../userprog/addrspace.h \
+ ../threads/synch.h
 console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/console.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -510,12 +526,13 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-redhat-linux/5.1.1/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/string.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../threads/synch.h
+ ../threads/thread.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../filesys/openfile.h \
+ ../machine/machine.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h \
+ ../userprog/bitmap.h ../threads/synch.h
 machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -538,10 +555,11 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/string.h ../machine/translate.h ../machine/disk.h \
  ../threads/system.h ../threads/utility.h ../threads/thread.h \
- ../machine/machine.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../filesys/openfile.h ../machine/machine.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
  ../threads/synch.h
 mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
@@ -565,11 +583,12 @@ mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/string.h ../machine/translate.h ../machine/disk.h \
  ../machine/mipssim.h ../threads/system.h ../threads/utility.h \
- ../threads/thread.h ../machine/machine.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
- ../threads/list.h ../machine/interrupt.h ../threads/list.h \
- ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../threads/synch.h
+ ../threads/thread.h ../threads/../userprog/nachostabla.h \
+ ../threads/../userprog/bitmap.h ../filesys/openfile.h \
+ ../machine/machine.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/scheduler.h ../threads/list.h \
+ ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../machine/timer.h ../userprog/bitmap.h ../threads/synch.h
 translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -593,9 +612,10 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  /usr/include/string.h ../machine/translate.h ../machine/disk.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
  ../threads/system.h ../threads/utility.h ../threads/thread.h \
- ../machine/machine.h ../threads/scheduler.h ../threads/list.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../userprog/bitmap.h ../filesys/openfile.h \
+ ../threads/../userprog/nachostabla.h ../threads/../userprog/bitmap.h \
+ ../filesys/openfile.h ../machine/machine.h ../threads/scheduler.h \
+ ../threads/list.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h ../userprog/bitmap.h \
  ../threads/synch.h
 nachostabla.o: ../userprog/nachostabla.cc /usr/include/stdc-predef.h \
  ../userprog/nachostabla.h ../userprog/bitmap.h ../threads/copyright.h \
