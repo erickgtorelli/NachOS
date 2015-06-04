@@ -34,8 +34,7 @@ const unsigned STACK_FENCEPOST = 0xdeadbeef;
 
 Thread::Thread(const char* threadName)
 {
-    openedFiles = new NachosOpenFilesTable();
-    semaforos = new SemTable();	
+    openedFiles = new NachosOpenFilesTable();	
     name = threadName;
     stackTop = NULL;
     stack = NULL;
@@ -61,7 +60,6 @@ Thread::~Thread()
 {
     DEBUG('t', "Deleting thread \"%s\"\n", name);
     delete openedFiles;
-    delete semaforos;
     ASSERT(this != currentThread);
     if (stack != NULL)
 	DeallocBoundedArray((char *) stack, StackSize * sizeof(HostMemoryAddress));

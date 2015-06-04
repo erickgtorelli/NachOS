@@ -40,6 +40,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "../userprog/nachostabla.h"
+#include "../userprog/semaforosTabla.h"
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
@@ -93,6 +94,8 @@ class Thread {
 						// relinquish the processor
     void Finish();  				// The thread is done executing
     NachosOpenFilesTable* openedFiles;
+    SemTable* semaforos; 
+	
     void CheckOverflow();   			// Check if thread has 
 						// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }

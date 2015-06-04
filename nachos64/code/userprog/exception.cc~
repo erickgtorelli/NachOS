@@ -31,8 +31,7 @@
 
 #include "translate.h"
 #include <fcntl.h>
-//#include "threadsTabla.h"
-#include "semaforosTabla.h"
+#include "threadsTabla.h"
 
 
 //----------------------------------------------------------------------
@@ -356,25 +355,29 @@ void Nachos_SemCreate(){
 	
 	int valorInicial= machine->ReadRegister(5);
 	int nombre = machine->ReadRegister(4);
-	int indicador = 
-     	char* buffer = ReadFromNachosMemory(nombre); 
-	if(valorInicial!=-1){
-		semCreados[valorInicial] = new Semaphore((const char*)buffer,valorInicial);
-		semMap->Mark(valorInicial);
-		machine->WriteRegister(2,valorInicial);
-	}else{
-		machine->WriteRegister(2,-1);
-	}
-	
+        char buffer[100];
+	int fin = '\0';
+	int value = 0;
+	int posicion = 0;
+	do{
+		machine->ReadMem(nombre+posicion,1,&value);
+		buffer[posicion] = value;
+		posicion++;
+	}while(value != fin);
+	buffer[posicion]=fin;
+	Semaphore * semActual = new Semaphore(buffer, valorInicial);
+        int espacio = controlSem->Find();
+	vectorSem[espacio] = semActual;
+	controlSem->Mark(espacio);
+	machine->WriteRegister(2,espacio);
 	printf("Semaforo creado\n");
-	returnFromSystemCall();
 }
 
 void Nachos_SemDestroy(){
 	
 	int id = machine->ReadRegister(4);
-	delete semCreados[id];
-	semMap->Clear(id);
+	delete vectorSem[id];
+	controlSem->Clear(id);
 	printf("Destruccion de semaforos");
 }
 
@@ -497,7 +500,6 @@ void ExceptionHandler(ExceptionType which)
 	     	break;
 	     case SC_SemDestroy:
 		Nachos_SemDestroy();
-		break;
 	     case SC_Fork:
 		Nachos_Fork();
 		break;
