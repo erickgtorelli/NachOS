@@ -31,6 +31,7 @@
 
 #include "translate.h"
 #include <fcntl.h>
+#include "threadsTabla.h"
 
 
 //----------------------------------------------------------------------
@@ -56,7 +57,7 @@
 //	"which" is the kind of exception.  The list of possible exceptions 
 //	are in machine.h.
 //----------------------------------------------------------------------
-
+threadsTabla* threadsActivos = new threadsTabla();
 
 void returnFromSystemCall() {
 
@@ -408,7 +409,9 @@ void Nachos_Fork() {			// System call 9
 	Thread * newT = new Thread( "child to execute Fork code" );
 
 	// We need to share the Open File Table structure with this new child
-	
+	newT->openedFiles = currentThread->openedFiles;
+	//currentThread->SpaceId = threadsActivos->AddThread(currentThread);
+	newT->SpaceId = threadsActivos->AddThread(newT);
 	// Child and father will also share the same address space, except for the stack
 	// Text, init data and uninit data are shared, a new stack area must be created
 	// for the new child
