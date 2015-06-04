@@ -11,10 +11,9 @@ class threadsTabla{
 	threadsTabla();
 	~threadsTabla();
 	
-	SpaceId AddThread(int* Thread);
+	SpaceId AddThread(Thread* thread);
 	int DelThread(int NachosHandle);
-	char* getThreadName(int NachosHandle);
- 	Thread* getThread(int NachosHandle);
+ 	inline Thread* getThread(int NachosHandle){return threadsOn[NachosHandle];};
  	
  	private:
  	Thread** threadsOn;		// A vector with user operating threads

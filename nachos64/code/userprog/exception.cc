@@ -432,6 +432,42 @@ void Nachos_Fork() {			// System call 9
 	DEBUG( 'u', "Exiting Fork System call\n" );
 }	
 
+void Nachos_Yield(){
+	currentThread->Yield();
+	machine->WriteRegister(PCReg,machine->ReadRegister(NextPCReg));
+}
+
+void startProcess(const char *filename)
+{
+	OpenFile *executable = fileSystem->Open(filename);
+	AddrSpace *space;
+
+	if (executable == NULL) {
+	printf("Unable to open file %s\n", filename);
+	return;
+	}
+	space = new AddrSpace(executable);
+	currentThread->space = space;
+
+	delete executable;			// close file
+
+	space->InitRegisters();		// set the initial register values
+	space->RestoreState();		// load page table register
+
+	machine->Run();			// jump to the user progam
+	ASSERT(false);			// machine->Run never returns;
+					// the address space exits
+					// by doing the syscall "exit"
+}
+
+void Nachos_Exec(){
+	Thread * newT = new Thread( "Exec Thread" );
+	newT->SpaceId = threadsActivos->AddThread(newT);
+
+	char* name = ReadFromNachosMemory(machine->ReadRegister(4));
+	startProcess((const char*)name);
+}
+
 void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);	
@@ -467,6 +503,12 @@ void ExceptionHandler(ExceptionType which)
 	     case SC_Fork:
 		Nachos_Fork();
 		break;
+		case SC_Yield:
+			  Nachos_Yield();
+			  break;
+		case SC_Exec:
+			  Nachos_Exec();
+			  break;
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);

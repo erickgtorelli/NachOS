@@ -1,8 +1,8 @@
 #include "threadsTabla.h"
-
+typedef int SpaceId;
 threadsTabla::threadsTabla(){
 	threadsOn = new Thread*[MAX_THREADS];
-	threadsOnMap = new Bitmap(MAX_THREADS);
+	threadsOnMap = new BitMap(MAX_THREADS);
 }
 
 threadsTabla::~threadsTabla(){
@@ -17,7 +17,6 @@ SpaceId threadsTabla::AddThread(Thread* thread){
 }
 
 int threadsTabla::DelThread(int NachosHandle){
-	threadsOn[NachosHandle];
 	 threadsOnMap->Clear(NachosHandle);
 	return 0;
 }

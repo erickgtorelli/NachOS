@@ -5,15 +5,15 @@
 #include "bitmap.h"
 #include "../threads/thread.h"
 class threadsTabla{
-	typedef SpaceId int;
+	typedef int SpaceId;
 	
 	public: 
 	threadsTabla();
 	~threadsTabla();
 	
-	SpaceId AddThread(int* Thread);
+	SpaceId AddThread(Thread* thread);
 	int DelThread(int NachosHandle);
- 	inline Thread* getThread(int NachosHandle){return threadsOn[NachosHandle]};
+ 	inline Thread* getThread(int NachosHandle){return threadsOn[NachosHandle];};
  	
  	private:
  	Thread** threadsOn;		// A vector with user operating threads
