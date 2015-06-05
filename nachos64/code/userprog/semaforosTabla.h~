@@ -14,7 +14,8 @@ class SemTable {
     void Print();               // Print contents
     int CreateSem(Semaphore* indicador );
     int Close( int indicador );
-    
+    void SemSignal(int id);
+    void SemWait(int id);
   private:
     Semaphore** semCreados;		// A vector with user opened files
     BitMap * semMap;		// A bitmap to control our vector

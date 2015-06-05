@@ -12,7 +12,7 @@ class SemTable {
     ~SemTable();
     int getUnixHandle( int NachosSem );
     void Print();               // Print contents
-    int CreateSem(Semaphore* indicador );
+    int CreateSem(const char* buffer, int indicador );
     int Close( int indicador );
     void SemSignal(int id);
     void SemWait(int id);

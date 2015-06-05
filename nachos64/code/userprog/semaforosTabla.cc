@@ -17,17 +17,18 @@ SemTable::~SemTable(){
 	delete[] semCreados;
 	delete semMap;
 }
- void SemTable::SemSignal(int id){
-	 semCreados[id]->V();
+ void SemTable::SemSignal(int id){		 
+	semCreados[id]->V();
 	
  }
 void SemTable::SemWait(int id){
 	semCreados[id]->P();
 }
-int SemTable::CreateSem(Semaphore* indicador ){
+int SemTable::CreateSem(const char* buffer, int indicador ){
 	
 	int clearPosition = semMap->Find();
-	semCreados[clearPosition] = indicador;
+	Semaphore* s = new Semaphore(buffer, indicador); 
+	semCreados[clearPosition] = s;
 	return clearPosition;
 }
 
@@ -36,6 +37,7 @@ int SemTable::Close( int indicador ){
 	Semaphore* s;
 	s = semCreados[indicador];
 	delete s;
+	semCreados = NULL;
 	semMap->Clear(indicador);
 	return 0;
 }

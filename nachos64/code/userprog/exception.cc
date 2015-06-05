@@ -353,20 +353,16 @@ void Nachos_SemCreate(){
 	int nameNachos = machine->ReadRegister(4);
 	int numRecursos = machine->ReadRegister(5);
 	char* buffer = ReadFromNachosMemory(nameNachos);
-	
-	Semaphore* Sem = new Semaphore((const char*)buffer,numRecursos);
-   	int ret = Semaforos->CreateSem(Sem);
+   	int ret = Semaforos->CreateSem((const char*)buffer, numRecursos);
    	machine->WriteRegister(2,ret);
 	returnFromSystemCall();
-	
-	printf("Semaforo creado\n");
 }
 
 void Nachos_SemDestroy(){
 	
 	int id = machine->ReadRegister(4);
 	Semaforos->Close(id);
-	printf("Destruccion de semaforos");
+	returnFromSystemCall();
 }
 
 void NachosForkThread( void * p ) { // for 64 bits version
@@ -484,11 +480,13 @@ void Nachos_Exec(){
 void Nachos_SemSignal(){
 	int id = machine->ReadRegister(4);
 	Semaforos->SemSignal(id);
+	returnFromSystemCall();
 }
 
 void Nachos_SemWait(){
 	int id = machine->ReadRegister(4);
 	Semaforos->SemWait(id);
+	returnFromSystemCall();
 }
 void ExceptionHandler(ExceptionType which)
 {

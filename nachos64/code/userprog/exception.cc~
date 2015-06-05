@@ -353,20 +353,16 @@ void Nachos_SemCreate(){
 	int nameNachos = machine->ReadRegister(4);
 	int numRecursos = machine->ReadRegister(5);
 	char* buffer = ReadFromNachosMemory(nameNachos);
-	
-	Semaphore* Sem = new Semaphore((const char*)buffer,numRecursos);
-   	int ret = Semaforos->CreateSem(Sem);
+   	int ret = Semaforos->CreateSem((const char*)buffer, numRecursos);
    	machine->WriteRegister(2,ret);
 	returnFromSystemCall();
-	
-	printf("Semaforo creado\n");
 }
 
 void Nachos_SemDestroy(){
 	
 	int id = machine->ReadRegister(4);
 	Semaforos->Close(id);
-	printf("Destruccion de semaforos");
+	returnFromSystemCall();
 }
 
 void NachosForkThread( void * p ) { // for 64 bits version
@@ -481,6 +477,15 @@ void Nachos_Exec(){
 	startProcess((const char*)name);
 }
 
+void Nachos_SemSignal(){
+	int id = machine->ReadRegister(4);
+	Semaforos->SemSignal(id);
+}
+
+void Nachos_SemWait(){
+	int id = machine->ReadRegister(4);
+	Semaforos->SemWait(id);
+}
 void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);	
@@ -526,7 +531,12 @@ void ExceptionHandler(ExceptionType which)
 	     case SC_Exec:
 		Nachos_Exec();
 		break;
-	     case SC_
+		case SC_SemWait:
+			Nachos_SemWait();
+			break;
+		case SC_SemSignal:
+			Nachos_SemSignal();
+			break;
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);
