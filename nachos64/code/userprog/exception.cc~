@@ -73,6 +73,9 @@ void returnFromSystemCall() {
 }       // returnFromSystemCall
 
 
+//Función que convierte de la memoria virtual de NachOS
+//a la memoria fisica del sistema
+
 char * ReadFromNachosMemory(int virtualmemory){
 	char* string = new char[100];
 	
@@ -90,14 +93,15 @@ char * ReadFromNachosMemory(int virtualmemory){
 	
 	return string;
 }
-
+//Detiene el sistema de NachOS
 void Nachos_Halt() {                    // System call 0
 
         DEBUG('a', "Shutdown, initiated by user program.\n");
         interrupt->Halt();
 
 }       // Nachos_Halt
-
+//Crea un archivo con el nombre del archivo proveniente
+//del registro 4
 void Nachos_Create() {                    // System call 4
 /* System call definition described to user
 	int Create(
@@ -108,19 +112,9 @@ void Nachos_Create() {                    // System call 4
 	// Use NachosOpenFilesTable class to create a relationship
 	// between user file and unix file
 	// Verify for errors
-	char buffer[100];
 	int nameNachos = machine->ReadRegister(4);
-	int fin = '\0';
-	int value = 0;
-	int posicion = 0;
-	//Read Name File
-	do{
-		machine->ReadMem(nameNachos+posicion,1,&value);
-		buffer[posicion] = value;
-		posicion++;
-	}while(value != fin);
-	buffer[posicion]=fin;
-	int UnixHandel = creat("PruebaWrite.txt", 0777);
+	char* buffer  = ReadFromNachosMemory(nameNachos);
+	int UnixHandel = creat((const char*)buffer, 0777);
 	if(UnixHandel != -1){
 		int NachosHandle = currentThread->openedFiles->Open(UnixHandel);
 		machine->WriteRegister( 2, NachosHandle + 3); 
@@ -135,7 +129,8 @@ void Nachos_Create() {                    // System call 4
 
 
 }       // Nachos_Create
-
+//Abre el archivo especificado con el nombre 
+//proveniente del registro 4   
 
 void Nachos_Open() {                    // System call 5
 /* System call definition described to user
@@ -167,7 +162,7 @@ void Nachos_Open() {                    // System call 5
 
 
 }       // Nachos_Open
-
+//Escribe en el archivo con el id especificado en el registro 4
 void Nachos_Write() {                   // System call 7
 /*
  //System call definition described to user
@@ -252,7 +247,7 @@ void Nachos_Write() {                   // System call 7
         returnFromSystemCall();		// Update the PC registers
 
 }       // Nachos_Write
-
+//Lee del archivo o consola la cantidad de bytes especificados en el registro 5
 void Nachos_Read(){
 	char* buffer=NULL;
         int size = machine->ReadRegister( 5 );	// Read size to read
@@ -335,7 +330,8 @@ void Nachos_Read(){
         returnFromSystemCall();		// Update the PC registers
 	
 }
-
+//Termina el proceso, y libera la memoria ulizada por este en caso de que otro
+//proceso no la este utilizando
 void Nachos_Exit(){
 	currentThread->Finish();	
 }
@@ -452,6 +448,31 @@ void startProcess(const char *filename)
 					// by doing the syscall "exit"
 }
 
+void Nachos_Join(){
+
+	
+	//	otra implementacion usando los id de los hilos para guardar
+	/*
+	int identificador = currentThread->SpaceId;
+	Semaphore* s = new Semaphore("Join",0);
+	int id = machine->ReadRegister(4);
+	identificador = threadsActivos->addJoin(currentThread,s,identificador,id);
+	s->P();
+	threadsActivos->delJoin(currentThread,s,identificador,id);
+	machine->WriteRegister(2,identificador);
+	*/
+
+	//implementacion usando bitMap
+	Semaphore* s = new Semaphore("Join",0);
+	int id = machine->ReadRegister(4);
+	int identificador = threadsActivos->addJoin(currentThread,s,id);
+	s->P();
+	threadsActivos->delJoin(currentThread,s,identificador,id);
+	machine->WriteRegister(2,identificador);
+	
+
+}
+
 void Nachos_Exec(){
 	Thread * newT = new Thread( "Exec Thread" );
 	newT->SpaceId = threadsActivos->AddThread(newT);
@@ -475,6 +496,9 @@ void ExceptionHandler(ExceptionType which)
              case SC_Open:
                 Nachos_Open();             // System call # 5
                 break;
+	     case SC_Join:
+		Nachos_Join();
+		break;
 	     case SC_Read:     		   // System call # 6
 		Nachos_Read();
 		break;
@@ -492,15 +516,17 @@ void ExceptionHandler(ExceptionType which)
 	     	break;
 	     case SC_SemDestroy:
 		Nachos_SemDestroy();
+		break;
 	     case SC_Fork:
 		Nachos_Fork();
 		break;
-		case SC_Yield:
-			  Nachos_Yield();
-			  break;
-		case SC_Exec:
-			  Nachos_Exec();
-			  break;
+	     case SC_Yield:
+		Nachos_Yield();
+		break;
+	     case SC_Exec:
+		Nachos_Exec();
+		break;
+	     case SC_
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);
