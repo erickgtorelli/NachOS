@@ -481,6 +481,15 @@ void Nachos_Exec(){
 	startProcess((const char*)name);
 }
 
+void Nachos_SemSignal(){
+	int id = machine->ReadRegister(4);
+	Semaforos->SemSignal(id);
+}
+
+void Nachos_SemWait(){
+	int id = machine->ReadRegister(4);
+	Semaforos->SemWait(id);
+}
 void ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);	
@@ -526,7 +535,12 @@ void ExceptionHandler(ExceptionType which)
 	     case SC_Exec:
 		Nachos_Exec();
 		break;
-	     
+		case SC_SemWait:
+			Nachos_SemWait();
+			break;
+		case SC_SemSignal:
+			Nachos_SemSignal();
+			break;
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);

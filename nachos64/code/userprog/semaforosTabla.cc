@@ -17,7 +17,13 @@ SemTable::~SemTable(){
 	delete[] semCreados;
 	delete semMap;
 }
-
+ void SemTable::SemSignal(int id){
+	 semCreados[id]->V();
+	
+ }
+void SemTable::SemWait(int id){
+	semCreados[id]->P();
+}
 int SemTable::CreateSem(Semaphore* indicador ){
 	
 	int clearPosition = semMap->Find();
