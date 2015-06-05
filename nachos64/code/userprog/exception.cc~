@@ -369,8 +369,7 @@ void Nachos_SemCreate(){
 void Nachos_SemDestroy(){
 	
 	int id = machine->ReadRegister(4);
-	delete vectorSem[id];
-	controlSem->Clear(id);
+	Semaforos->Close(id);
 	printf("Destruccion de semaforos");
 }
 

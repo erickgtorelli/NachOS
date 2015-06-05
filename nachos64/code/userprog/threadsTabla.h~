@@ -5,7 +5,7 @@
 #include "bitmap.h"
 #include "../threads/thread.h"
 class threadsTabla{
-	typedef SpaceId int;
+	typedef int SpaceId;
 	
 	public: 
 	threadsTabla();

@@ -452,6 +452,31 @@ void startProcess(const char *filename)
 					// by doing the syscall "exit"
 }
 
+void Nachos_Join(){
+
+	
+	//	otra implementacion usando los id de los hilos para guardar
+	/*
+	int identificador = currentThread->SpaceId;
+	Semaphore* s = new Semaphore("Join",0);
+	int id = machine->ReadRegister(4);
+	identificador = threadsActivos->addJoin(currentThread,s,identificador,id);
+	s->P();
+	threadsActivos->delJoin(currentThread,s,identificador,id);
+	machine->WriteRegister(2,identificador);
+	*/
+
+	//implementacion usando bitMap
+	Semaphore* s = new Semaphore("Join",0);
+	int id = machine->ReadRegister(4);
+	int identificador = threadsActivos->addJoin(currentThread,s,id);
+	s->P();
+	threadsActivos->delJoin(currentThread,s,identificador,id);
+	machine->WriteRegister(2,identificador);
+	
+
+}
+
 void Nachos_Exec(){
 	Thread * newT = new Thread( "Exec Thread" );
 	newT->SpaceId = threadsActivos->AddThread(newT);
@@ -475,6 +500,9 @@ void ExceptionHandler(ExceptionType which)
              case SC_Open:
                 Nachos_Open();             // System call # 5
                 break;
+	     case SC_Join:
+		Nachos_Join();
+		break;
 	     case SC_Read:     		   // System call # 6
 		Nachos_Read();
 		break;
@@ -492,15 +520,16 @@ void ExceptionHandler(ExceptionType which)
 	     	break;
 	     case SC_SemDestroy:
 		Nachos_SemDestroy();
+		break;
 	     case SC_Fork:
 		Nachos_Fork();
 		break;
-		case SC_Yield:
-			  Nachos_Yield();
-			  break;
+	     case SC_Yield:
+		Nachos_Yield();
+		break;
 		case SC_Exec:
-			  Nachos_Exec();
-			  break;
+		Nachos_Exec();
+		break;
              default:
                 printf("Unexpected syscall exception %d\n", type );
                 ASSERT(false);
