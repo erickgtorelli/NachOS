@@ -71,14 +71,16 @@ bool threadsTabla::UniqueSpaceUsing(AddrSpace *space,SpaceId ID){
 	int physicalPage = pageTable[0].physicalPage;
 	int physicalPageCurrent;
 	while(i < MAX_THREADS && Unico){
-		if(threadsOnMap->Test(i)){
+		
+		if(threadsOnMap->Test(i) && i != ID){
 		   	TranslationEntry* pageTable =  threadsOn[i]->space->getPageTable();
 			 physicalPageCurrent = pageTable[0].physicalPage;
-			if(physicalPageCurrent == physicalPage && i != ID){
+			if(physicalPageCurrent){
 				Unico = false;
 			}		
 			
 		}
+		
 		i++;
 	}
 	return Unico;
@@ -88,6 +90,7 @@ bool threadsTabla::UniqueSpaceUsing(AddrSpace *space,SpaceId ID){
 SpaceId threadsTabla::AddThread(Thread* thread){
 	int clearPosition = threadsOnMap->Find();
 	threadsOn[clearPosition] = thread;
+	//printf("Thread agregado");
 	return clearPosition;
 }
 

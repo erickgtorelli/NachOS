@@ -332,8 +332,9 @@ void Nachos_Read(){
 //proceso no la este utilizando
 void Nachos_Exit(){
 	int SpaceId = machine->ReadRegister(4);
-	AddrSpace *space = threadsActivos->getThread(SpaceId)->space;
-	if(true == threadsActivos->UniqueSpaceUsing(space,SpaceId)){
+	AddrSpace *space = currentThread->space;
+	
+	if(threadsActivos->UniqueSpaceUsing(space,SpaceId)){
 		currentThread->Finish();	
 	}
 	//Solo se elimina el stack si otros threads estan usando la demas memoria
@@ -346,7 +347,8 @@ void Nachos_Exit(){
 		currentThread->setStatus(BLOCKED);
 	}
 	threadsActivos->avisarHilo(SpaceId);
-		
+	
+        returnFromSystemCall();		
 }
 
 void Nachos_Close(){
