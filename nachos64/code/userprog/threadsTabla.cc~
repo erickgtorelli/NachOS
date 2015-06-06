@@ -61,7 +61,7 @@ bool threadsTabla::UniqueSpaceUsing(AddrSpace *space,SpaceId ID){
 	int physicalPageCurrent;
 	while(i < MAX_THREADS && Unico){
 		if(threadsOnMap->Test(i)){
-		   	TranslationEntry* pageTable =  threadsOn[i]->getThread(SpaceId)->space->getPageTable();
+		   	TranslationEntry* pageTable =  threadsOn[i]->space->getPageTable();
 			 physicalPageCurrent = pageTable[0].physicalPage;
 			if(physicalPageCurrent == physicalPage && i != ID){
 				Unico = false;

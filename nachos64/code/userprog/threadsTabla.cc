@@ -50,6 +50,17 @@ int threadsTabla::delJoin(Thread* thread, Semaphore* s,int identificador, SpaceI
 
 }
 
+int threadsTabla::avisarHilo(int id){
+	for(unsigned int c = 0; c < MAX_THREADS; ++c ){
+		if(hilosJoin[c].hiloEsperado != -1 && id == hilosJoin[c].hiloEsperado){
+			hilosJoin[c].sem->V();	
+			return c;
+		}
+
+	}
+
+} 
+
 bool threadsTabla::UniqueSpaceUsing(AddrSpace *space,SpaceId ID){
 	int i = 0;
 	bool Unico = true;

@@ -9,9 +9,9 @@ class threadsTabla{
 	typedef int SpaceId;
 	
 	struct hilosEnEspera{
-		Thread* hilo;
-		Semaphore* sem;
-		SpaceId hiloEsperado;
+		Thread* hilo=NULL;
+		Semaphore* sem=NULL;
+		SpaceId hiloEsperado=-1;
 	};
 	
 	public: 
@@ -27,6 +27,7 @@ class threadsTabla{
 	
 	int addJoin(Thread* thread, Semaphore* s, SpaceId id);
 	int delJoin(Thread* thread, Semaphore* s,int identificador, SpaceId id);
+	int avisarHilo(int id);
 	
  	
  	private:

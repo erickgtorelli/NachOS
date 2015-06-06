@@ -224,7 +224,6 @@ void Nachos_Write() {                   // System call 7
 				}while(value != fin);
 				buffer[size] = fin;
 				bytes = write(Unix,(const void*)buffer,size);
-							
 				machine->WriteRegister(2,bytes);
 			}else{
 				
@@ -243,7 +242,6 @@ void Nachos_Write() {                   // System call 7
 	}
 	// Update simulation stats, see details in Statistics class in machine/stats.cc
 	// Console->V();
-
         returnFromSystemCall();		// Update the PC registers
 
 }       // Nachos_Write
@@ -347,6 +345,7 @@ void Nachos_Exit(){
 		}
 		currentThread->setStatus(BLOCKED);
 	}
+	threadsActivos->avisarHilo(SpaceId);
 		
 }
 
@@ -471,7 +470,7 @@ void Nachos_Join(){
 	threadsActivos->delJoin(currentThread,s,identificador,id);
 	machine->WriteRegister(2,identificador);
 	*/
-
+	
 	//implementacion usando bitMap
 	Semaphore* s = new Semaphore("Join",0);
 	int id = machine->ReadRegister(4);
@@ -479,14 +478,13 @@ void Nachos_Join(){
 	s->P();
 	threadsActivos->delJoin(currentThread,s,identificador,id);
 	machine->WriteRegister(2,identificador);
-	
+	returnFromSystemCall();	
 
 }
 
 void Nachos_Exec(){
 	Thread * newT = new Thread( "Exec Thread" );
 	newT->SpaceId = threadsActivos->AddThread(newT);
-
 	char* name = ReadFromNachosMemory(machine->ReadRegister(4));
 	startProcess((const char*)name);
 }
