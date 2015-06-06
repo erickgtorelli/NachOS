@@ -333,7 +333,21 @@ void Nachos_Read(){
 //Termina el proceso, y libera la memoria ulizada por este en caso de que otro
 //proceso no la este utilizando
 void Nachos_Exit(){
-	currentThread->Finish();	
+	int SpaceId = machine->ReadRegister(4);
+	AddrSpace *space = threadsActivos->getThread(SpaceId)->space;
+	if(true == threadsActivos->UniqueSpaceUsing(space,SpaceId)){
+		currentThread->Finish();	
+	}
+	//Solo se elimina el stack si otros threads estan usando la demas memoria
+	else{
+		TranslationEntry* pageTable =  space->getPageTable();
+		for(unsigned int i = (space->getNumPages()) - 8; i<(space->getNumPages());i++){
+			bzero((void*)&machine->mainMemory[128 * pageTable[i].physicalPage], 128);
+			MiMapa->Clear(i);
+		}
+		currentThread->setStatus(BLOCKED);
+	}
+		
 }
 
 void Nachos_Close(){

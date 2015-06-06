@@ -21,7 +21,7 @@ class threadsTabla{
 	SpaceId AddThread(Thread* thread);
 	int DelThread(int NachosHandle);
  	inline Thread* getThread(int NachosHandle){return threadsOn[NachosHandle];};
-	
+	bool UniqueSpaceUsing(AddrSpace *space,SpaceId ID);
 	//int addJoin(Thread* thread, Semaphore* s,int identificador, SpaceId id);
 	//int delJoin(Thread* thread, Semaphore* s,int identificador, SpaceId id);
 	

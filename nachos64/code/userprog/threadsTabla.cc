@@ -50,6 +50,29 @@ int threadsTabla::delJoin(Thread* thread, Semaphore* s,int identificador, SpaceI
 
 }
 
+bool threadsTabla::UniqueSpaceUsing(AddrSpace *space,SpaceId ID){
+	int i = 0;
+	bool Unico = true;
+	
+	//Si otro thread tiene la misma pagina fisica quiere decir que no es el 
+  	//unico con la misma tabla de archivos y demas
+	TranslationEntry* pageTable =  space->getPageTable();
+	int physicalPage = pageTable[0].physicalPage;
+	int physicalPageCurrent;
+	while(i < MAX_THREADS && Unico){
+		if(threadsOnMap->Test(i)){
+		   	TranslationEntry* pageTable =  threadsOn[i]->space->getPageTable();
+			 physicalPageCurrent = pageTable[0].physicalPage;
+			if(physicalPageCurrent == physicalPage && i != ID){
+				Unico = false;
+			}		
+			
+		}
+		i++;
+	}
+	return Unico;
+}
+
 
 SpaceId threadsTabla::AddThread(Thread* thread){
 	int clearPosition = threadsOnMap->Find();
