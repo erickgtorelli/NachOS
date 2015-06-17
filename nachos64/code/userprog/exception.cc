@@ -543,7 +543,7 @@ void ExceptionHandler(ExceptionType which)
 		break;
 	     case SC_Yield:
 		Nachos_Yield();
-		break;
+		break;PageFaultException:
 	     case SC_Exec:
 		Nachos_Exec();
 		break;
@@ -559,6 +559,9 @@ void ExceptionHandler(ExceptionType which)
                 break;
           }
        		break;
+	case PageFaultException:
+		printf("PageFaultException...\n");
+		break;
        default:
           printf( "Unexpected exception %d\n", which );
           ASSERT(false);

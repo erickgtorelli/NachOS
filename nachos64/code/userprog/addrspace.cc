@@ -146,7 +146,11 @@ AddrSpace::AddrSpace(OpenFile *executable)
 	freePage = MiMapa->Find();
 	pageTable[i].physicalPage = freePage;
 	//printf("Free Page %d \n",freePage);
-	pageTable[i].valid = true;
+	   #ifdef VM
+     		pageTable[i].valid = false;
+  	 #else
+     		 pageTable[i].valid = true;
+  	 #endif
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
 	pageTable[i].readOnly = false;  // if the code segment was entirely on 
@@ -160,14 +164,16 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 // then, copy in the code and data segments into memory
 
-
+	 #ifdef VM
+		
+	#else
 	for(unsigned int j = 0;j<numPages;j++){
 		int page = pageTable[j].physicalPage;
 		executable->ReadAt(&(machine->mainMemory[128 * page]),
 				   128, noffH.code.inFileAddr + j * 128);
 
 	}
-
+	#endif
 
 
 
@@ -242,6 +248,11 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
-    machine->pageTable = pageTable;
-    machine->pageTableSize = numPages;
+
+    #ifndef VM
+           /
+	#else
+         machine->pageTable = pageTable;
+          machine->pageTableSize = numPages;
+     #endif
 }
