@@ -33,6 +33,16 @@ class AddrSpace {
     void RestoreState();		// info on a context switch 
     unsigned int getNumPages();
     TranslationEntry* getPageTable();
+
+    typedef struct noffHeader {
+   	int noffMagic;		/* should be NOFFMAGIC */
+   	Segment code;		/* executable code segment */ 
+   	Segment initData;	/* initialized data segment */
+   	Segment uninitData;	/* uninitialized data segment --
+				 * should be zero'ed before use 
+				 */
+    } encabezadoProceso;	
+
   private:
     TranslationEntry* pageTable;	// Assume linear page table translation
 					// for now!

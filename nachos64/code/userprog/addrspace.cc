@@ -119,6 +119,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
     	SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
+    encabezadoProceso.code = noffH.code;
+    encabezadoProceso.initData = noffH.initData;
+    encabezadoProceso.uninitData = noff.uninitData;
 
 // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 

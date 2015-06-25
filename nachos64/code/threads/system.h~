@@ -41,8 +41,7 @@ extern Machine* machine;
 extern BitMap* MiMapa;	
 extern BitMap* MapaTLB;
 extern BitMap* MapaMainMem;
-extern BitMap* MapSwap;
-extern Swap* swap;	// user program memory and registers
+exter BitMap* MapSwap;	// user program memory and registers
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 

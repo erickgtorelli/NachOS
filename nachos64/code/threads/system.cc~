@@ -40,8 +40,7 @@ Machine *machine;
 BitMap* MiMapa;	
 BitMap* MapaTLB;
 BitMap* MapaMainMem;	
-BitMap* MapSwap;
-Swap* swap;	// user program memory and registers
+BitMap* MapSwap;	// user program memory and registers
 #endif
 
 #ifdef NETWORK
@@ -192,7 +191,6 @@ Initialize(int argc, char **argv)
     MapaTLB = new BitMap(TLBSize);
     MapaMainMem = new BitMap(32);
     MapSwap = new BitMap(64);
-    swap = new Swap();
 #endif
 
 #ifdef FILESYS
@@ -231,7 +229,6 @@ Cleanup()
     delete MapaTLB;
     delete MapaMainMem;
     delete MapSwap;
-    delete swap;
 #endif
 
 #ifdef FILESYS_NEEDED

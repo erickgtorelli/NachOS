@@ -128,7 +128,7 @@ class Machine {
     
     bool ReadMem(int addr, int size, int* value);
     bool WriteMem(int addr, int size, int value);
-    				// Read or write 1, 2, or 4 bytes of virtual 
+    				// Read or write 1, 2, or 4 bytes of virtual una cosa, 
 				// memory (at addr).  Return false if a 
 				// correct translation couldn't be found.
     

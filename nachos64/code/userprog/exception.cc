@@ -59,7 +59,9 @@
 //----------------------------------------------------------------------
 threadsTabla* threadsActivos = new threadsTabla();
 SemTable* Semaforos = new SemTable();
-
+int FIFOSwap = 0;
+int FIFOTLB = 0;
+int FIFOMainMem=0;
 void returnFromSystemCall() {
 
         int pc, npc;
@@ -491,6 +493,52 @@ void Nachos_Exec(){
 	startProcess((const char*)name);
 }
 
+int verificarTLB(){
+	
+	return MapaTLB->Find();
+}
+
+void Nachos_PageFaultException(){
+
+	
+	int direccion = machine->ReadRegister(39);
+	int numeroPagina = direccion/128;
+	TranslationEntry* paTable = currentThread->space->getPageTable();		
+	int pagina, frame;
+	
+	if(paTable[numeroPagina].valid == false){
+		if(paTable[numeroPagina].dirty == true){
+			
+		}
+		else{
+		if((pagina = MapaTLB->Find()) != -1){
+			machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
+			machine->tlb[pagina].physicalPage=paTable[numeroPagina].physicalPage;
+			machine->tlb[pagina].valid=true;
+		}
+
+		
+		if(direccion < currendThread->encabezadoProceso.code.size || direccion < currendThread->encabezadoProceso.initData.size){//codigo 
+			
+		
+		}else if(direccion > currendThread->encabezadoProceso.initData.size){//unitData o pila
+			//Hay campo en la memoria
+			if( (frame =  MapaMainMem->Find()) != -1){
+				bzero((void*)&machine->mainMemory[128 * frame], 128);
+				paTable[numeroPagina].physicalPage=frame;
+				paTable[pagina].valid=true;
+				machine->tlb[pagina].physicalPage=frame;
+				machine->tlb[pagina].valid=true;
+				
+			} 
+		}
+		}
+	}
+
+	
+
+}
+
 void Nachos_SemSignal(){
 	int id = machine->ReadRegister(4);
 	Semaforos->SemSignal(id);
@@ -543,7 +591,7 @@ void ExceptionHandler(ExceptionType which)
 		break;
 	     case SC_Yield:
 		Nachos_Yield();
-		break;PageFaultException:
+		break;
 	     case SC_Exec:
 		Nachos_Exec();
 		break;
@@ -561,6 +609,7 @@ void ExceptionHandler(ExceptionType which)
        		break;
 	case PageFaultException:
 		printf("PageFaultException...\n");
+		
 		break;
        default:
           printf( "Unexpected exception %d\n", which );
@@ -569,4 +618,8 @@ void ExceptionHandler(ExceptionType which)
     }
 
 }
+
+
+
+
 

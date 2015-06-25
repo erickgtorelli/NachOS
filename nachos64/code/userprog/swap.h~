@@ -17,7 +17,7 @@ class Swap{
   
   bool isSwaped(int page){
     ASSERT(page >= 0 && page < swapMap.size());
-    return MapSwap->Test(page);
+    return MapSwap->Test();
   }
 
   bool swapIn(int page, int frame);
