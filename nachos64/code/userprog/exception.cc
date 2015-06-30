@@ -511,14 +511,18 @@ void Nachos_PageFaultException(){
 			
 		}
 		else{
-		if((pagina = MapaTLB->Find()) != -1){
-			machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
-			machine->tlb[pagina].physicalPage=paTable[numeroPagina].physicalPage;
-			machine->tlb[pagina].valid=true;
-		}
-
-		
+	
 		if(direccion < currendThread->encabezadoProceso.code.size || direccion < currendThread->encabezadoProceso.initData.size){//codigo 
+			
+			if((frame = MapaMainMem->Find()) ==-1){
+				if(FIFOMainMem>32){
+					FIFOMainMem=0;
+				}
+				frame = FIFOMainMem;
+				FIFOMainMem++;
+			}
+			executable->ReadAt(&(machine->mainMemory[128 * frame]),
+		    128, noffH.code.inFileAddr + j * 128);
 			
 		
 		}else if(direccion > currendThread->encabezadoProceso.initData.size){//unitData o pila
@@ -533,6 +537,31 @@ void Nachos_PageFaultException(){
 			} 
 		}
 		}
+	}else{
+		
+			if((pagina = MapaTLB->Find()) != -1){
+				machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
+				machine->tlb[pagina].physicalPage=paTable[numeroPagina].physicalPage;
+				machine->tlb[pagina].valid=true;
+				machine->tlb[pagina].readOnly=paTabla[numeroPagina].readOnly;
+				machine->tlb[pagina].use=paTable[numeroPagina].use;
+				machine->tlb[pagina]-dirty=paTable[numeroPagina].dirty;
+			}else{
+				
+				if(FIFOTLB>3){
+					FIFOTLB=0;
+				}
+				machine->tlb[FIFOTLB].virtualPage=paTable[numeroPagina].virtualPage;
+				machine->tlb[FIFOTLB].physicalPage=paTable[numeroPagina].physicalPage;
+				machine->tlb[FIFOTLB].valid=true;
+				machine->tlb[FIFOTLB].readOnly=paTabla[numeroPagina].readOnly;
+				machine->tlb[FIFOTLB].use=paTable[numeroPagina].use;
+				machine->tlb[FIFOTLB]-dirty=paTable[numeroPagina].dirty;
+				++FIFOTLB;
+				
+			}
+		
+		
 	}
 
 	
