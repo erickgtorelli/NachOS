@@ -12,7 +12,7 @@ class Swap{
 
  public:
 
-  Swap(Thread* hilo);
+  Swap();
   ~Swap();
   
   bool isSwaped(int page){

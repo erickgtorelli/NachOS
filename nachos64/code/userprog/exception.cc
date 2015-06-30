@@ -498,8 +498,50 @@ int verificarTLB(){
 	return MapaTLB->Find();
 }
 
-void Nachos_PageFaultException(){
+	//Revisa si la Main memory esta llena, sino hace algoritmo de remplazo
+int freeIndexFrame(){
+	int frame;
+	bool FIFO = false;
+	//Revisa si la Main memory esta llena, sino hace algoritmo de remplazo
+	if((frame = MapaMainMem->Find()) ==-1){
+				if(FIFOMainMem>32){
+					
+					FIFOMainMem=0;
+				}
+				frame = FIFOMainMem;
+				FIFO = true;
+				FIFOMainMem++;
+			
+			}
+			if(!FIFO){
+				return frame;
+			}
+	//Si se usa el algoritmo de remplazo se debe de verificar si estan en la TLB, si fuera el caso
+	//invalidar la pagina		
+	for (int i = 0; i < TLBSize; i++)
+  	  if (machine->tlb[i].physicalPage == j &&
+		machine->tlb[i].valid){
+		paTable[machine->tlb[i].virtualPage]=machine->tlb[i]
+     			 machine->tlb[i].valid = false;
+      		break;
+    			}
+    	swap->swapOut(frame,1);		
+    	bzero((void*)&machine->mainMemory[128 * frame], 128);
+    	return frame;
+} 
+//Revisa si hay campo en el tlb sino hace algoritmo de remplazo
+int freeTLB(){
+	if( (frame =  MapaMainMem->Find()) == -1){
+			if(FIFOTLB>3){
+				FIFOTLB = 0;	
+			}
+			frame = FIFOTLB;
+				FIFOTLB++;
+			}
+			return frame;
+}
 
+void Nachos_PageFaultException(){
 	
 	int direccion = machine->ReadRegister(39);
 	int numeroPagina = direccion/128;
@@ -508,60 +550,33 @@ void Nachos_PageFaultException(){
 	
 	if(paTable[numeroPagina].valid == false){
 		if(paTable[numeroPagina].dirty == true){
+			//Swap
+			frame = freeIndexFrame();
+			swap->swapIn(numeroPagina,frame);
+			paTable[numeroPagina].physicalPage=frame;
+			paTable[numeroPagina].valid=true;
 			
-		}
-		else{
-	
-		if(direccion < currendThread->encabezadoProceso.code.size || direccion < currendThread->encabezadoProceso.initData.size){//codigo 
 			
-			if((frame = MapaMainMem->Find()) ==-1){
-				if(FIFOMainMem>32){
-					FIFOMainMem=0;
-				}
-				frame = FIFOMainMem;
-				FIFOMainMem++;
-			}
-			executable->ReadAt(&(machine->mainMemory[128 * frame]),
-		    128, noffH.code.inFileAddr + j * 128);
-			
-		
 		}else if(direccion > currendThread->encabezadoProceso.initData.size){//unitData o pila
 			//Hay campo en la memoria
-			if( (frame =  MapaMainMem->Find()) != -1){
-				bzero((void*)&machine->mainMemory[128 * frame], 128);
+			//FreeTLB
+			frame = freeIndexFrame();
+			pagina = freeTLB();
+			bzero((void*)&machine->mainMemory[128 * frame], 128);
 				paTable[numeroPagina].physicalPage=frame;
-				paTable[pagina].valid=true;
+				paTable[numeroPagina].valid=true;
 				machine->tlb[pagina].physicalPage=frame;
 				machine->tlb[pagina].valid=true;
-				
-			} 
 		}
 		}
 	}else{
-		
-			if((pagina = MapaTLB->Find()) != -1){
+				pagina = freeTLB();
 				machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
 				machine->tlb[pagina].physicalPage=paTable[numeroPagina].physicalPage;
 				machine->tlb[pagina].valid=true;
 				machine->tlb[pagina].readOnly=paTabla[numeroPagina].readOnly;
 				machine->tlb[pagina].use=paTable[numeroPagina].use;
 				machine->tlb[pagina]-dirty=paTable[numeroPagina].dirty;
-			}else{
-				
-				if(FIFOTLB>3){
-					FIFOTLB=0;
-				}
-				machine->tlb[FIFOTLB].virtualPage=paTable[numeroPagina].virtualPage;
-				machine->tlb[FIFOTLB].physicalPage=paTable[numeroPagina].physicalPage;
-				machine->tlb[FIFOTLB].valid=true;
-				machine->tlb[FIFOTLB].readOnly=paTabla[numeroPagina].readOnly;
-				machine->tlb[FIFOTLB].use=paTable[numeroPagina].use;
-				machine->tlb[FIFOTLB]-dirty=paTable[numeroPagina].dirty;
-				++FIFOTLB;
-				
-			}
-		
-		
 	}
 
 	

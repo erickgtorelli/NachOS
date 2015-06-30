@@ -24,8 +24,6 @@ bool Swap::swapIn(int page, int frame){
   bool res = (charsRead == PageSize);
   
   if (res){
-    //coremap->usedFrames[frame] = true;
-    //coremap->owner[frame] = id;
     machine->tlb[page].valid = true;
     machine->tlb[page].dirty = false;
   }
@@ -55,8 +53,6 @@ bool Swap::swapOut(int frame,int NumPages){
   machine->tlb[page].valid = false;
   machine->tlb[page].dirty = false;
   machine->tlb[page].physicalPage = -1;
-
-  //coremap->usedFrames[frame] = true;
 
 
   return true;
