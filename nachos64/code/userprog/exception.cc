@@ -550,7 +550,7 @@ void Nachos_PageFaultException(){
 	
 	if(paTable[numeroPagina].valid == false){
 		if(paTable[numeroPagina].dirty == true){
-			//Swap
+			 //Swap
 			frame = freeIndexFrame();
 			swap->swapIn(numeroPagina,frame);
 			paTable[numeroPagina].physicalPage=frame;
