@@ -6,13 +6,13 @@
 Swap::Swap(){
   int pageNum = 64;
   std::stringstream nameStream;
-  nameStream << "Swap." << sid;
+  nameStream << "Swap";
   swapFileName = nameStream.str();
   fileSystem->Create(swapFileName.c_str(), pageNum * PageSize);
   swapFile = fileSystem->Open(swapFileName.c_str());
-        Addr = space;
 }
-
+Swap::~Swap(){
+}
 bool Swap::swapIn(int page, int frame){
 
 

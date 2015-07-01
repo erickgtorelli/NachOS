@@ -113,6 +113,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 {
     NoffHeader noffH;
     unsigned int i, size;
+
     
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
@@ -121,7 +122,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     ASSERT(noffH.noffMagic == NOFFMAGIC);
     encabezadoProceso.code = noffH.code;
     encabezadoProceso.initData = noffH.initData;
-    encabezadoProceso.uninitData = noff.uninitData;
+    
 
 // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
@@ -130,7 +131,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+   // ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
@@ -144,11 +145,17 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
 
     for (i = 0; i < numPages; i++) {
-	
+		
 	pageTable[i].virtualPage = i;
+	 DEBUG('j', "Initializing page table, i %d, pageTable[]i.virtualPage %d\n", 
+					i,pageTable[i].virtualPage);
+	#ifdef VM
+	
+	#else
 	freePage = MiMapa->Find();
 	pageTable[i].physicalPage = freePage;
 	//printf("Free Page %d \n",freePage);
+	  #endif 
 	   #ifdef VM
      		pageTable[i].valid = false;
   	 #else
@@ -159,6 +166,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 	pageTable[i].readOnly = false;  // if the code segment was entirely on 
 					// a separate page, we could set its 
 					// pages to be read-only
+					
     }
     
 // zero out the entire address space, to zero the unitialized data segment 
@@ -174,7 +182,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 		int page = pageTable[j].physicalPage;
 		executable->ReadAt(&(machine->mainMemory[128 * page]),
 				   128, noffH.code.inFileAddr + j * 128);
-
+		DEBUG('M',"En memoria esta %d",	&(machine->mainMemory[128 * page]));	
 	}
 	#endif
 
@@ -253,9 +261,9 @@ void AddrSpace::RestoreState()
 {
 
     #ifndef VM
-           /
+           
 	#else
-         machine->pageTable = pageTable;
+         machine->pageTable = NULL;
           machine->pageTableSize = numPages;
      #endif
 }

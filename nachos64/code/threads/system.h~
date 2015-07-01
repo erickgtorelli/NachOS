@@ -17,7 +17,7 @@
 #include "timer.h"
 #include "bitmap.h"
 #include "synch.h"
-
+#include "../userprog/swap.h"
 
 #define CANTSEMAFOROS 80
 // Initialization and cleanup routines
@@ -41,7 +41,8 @@ extern Machine* machine;
 extern BitMap* MiMapa;	
 extern BitMap* MapaTLB;
 extern BitMap* MapaMainMem;
-exter BitMap* MapSwap;	// user program memory and registers
+extern BitMap* MapSwap;
+extern Swap* swap;	// user program memory and registers
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 

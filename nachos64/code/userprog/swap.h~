@@ -4,7 +4,7 @@
 #include "openfile.h"
 #include <vector>
 #include <string>
-#inc
+
 
 typedef int SpaceId;
 
@@ -12,11 +12,10 @@ class Swap{
 
  public:
 
-  Swap(Thread* hilo);
+  Swap();
   ~Swap();
   
   bool isSwaped(int page){
-    ASSERT(page >= 0 && page < swapMap.size());
     return MapSwap->Test(page);
   }
 

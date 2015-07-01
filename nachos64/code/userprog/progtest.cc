@@ -31,8 +31,13 @@ StartProcess(const char *filename)
 	return;
     }
     space = new AddrSpace(executable);    
+    
     currentThread->space = space;
+    //const char* name = new const char(filename);
+    currentThread->fileName = filename;
+    //strncpy(currentThread->fileName,filename,sizeof(filename));
 
+	
     delete executable;			// close file
 
     space->InitRegisters();		// set the initial register values

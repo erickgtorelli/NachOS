@@ -17,7 +17,7 @@
 #include "timer.h"
 #include "bitmap.h"
 #include "synch.h"
-
+#include "swap.h"
 
 #define CANTSEMAFOROS 80
 // Initialization and cleanup routines

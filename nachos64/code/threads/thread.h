@@ -123,7 +123,8 @@ class Thread {
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
     int SpaceId;
-    AddrSpace *space;			// User code this thread is running.
+    AddrSpace *space;	
+    const char* fileName;		// User code this thread is running.
 #endif
 };
 

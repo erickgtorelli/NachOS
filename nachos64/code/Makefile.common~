@@ -81,7 +81,9 @@ USERPROG_H = ../userprog/addrspace.h\
 	../machine/mipssim.h\
 	../machine/translate.h\
 	../userprog/nachostabla.h\
-	../userprog/threadsTabla.h
+	../userprog/threadsTabla.h\
+	../userprog/semaforosTabla.h\
+	../userprog/swap.h
 
 USERPROG_C = ../userprog/addrspace.cc\
 	../userprog/bitmap.cc\
@@ -91,10 +93,13 @@ USERPROG_C = ../userprog/addrspace.cc\
 	../machine/machine.cc\
 	../machine/mipssim.cc\
 	../machine/translate.cc\
-	../userprog/nachostabla.cc
+	../userprog/nachostabla.cc\
+	../userprog/threadsTabla.cc\
+	../userprog/semaforosTabla.cc\
+	../userprog/swap.cc
 
 USERPROG_O = addrspace.o bitmap.o exception.o progtest.o console.o machine.o \
-	mipssim.o translate.o nachostabla.o
+	mipssim.o translate.o nachostabla.o threadsTabla.o semaforosTabla.o swap.o 
 
 VM_H = 
 VM_C = 

@@ -500,11 +500,12 @@ int verificarTLB(){
 
 	//Revisa si la Main memory esta llena, sino hace algoritmo de remplazo
 int freeIndexFrame(){
+	TranslationEntry* pageTable = currentThread->space->getPageTable();
 	int frame;
 	bool FIFO = false;
 	//Revisa si la Main memory esta llena, sino hace algoritmo de remplazo
 	if((frame = MapaMainMem->Find()) ==-1){
-				if(FIFOMainMem>32){
+				if(FIFOMainMem>31){
 					
 					FIFOMainMem=0;
 				}
@@ -516,72 +517,150 @@ int freeIndexFrame(){
 			if(!FIFO){
 				return frame;
 			}
+			
 	//Si se usa el algoritmo de remplazo se debe de verificar si estan en la TLB, si fuera el caso
 	//invalidar la pagina		
 	for (int i = 0; i < TLBSize; i++)
-  	  if (machine->tlb[i].physicalPage == j &&
+  	  if (machine->tlb[i].physicalPage == frame &&
 		machine->tlb[i].valid){
-		paTable[machine->tlb[i].virtualPage]=machine->tlb[i]
+		pageTable[machine->tlb[i].virtualPage]=machine->tlb[i];
      			 machine->tlb[i].valid = false;
       		break;
     			}
-    	swap->swapOut(frame,1);		
+    			
+    	swap->swapOut(frame,4);
+    //Invalidar en el page table
+    for(int i = 0;i<currentThread->space->getNumPages();i++){
+		if(pageTable[i].physicalPage == frame &&
+			pageTable[i].valid == true){
+				pageTable[i].valid = false;
+				pageTable[i].physicalPage = -1;
+			}
+	}
+    
+    		
     	bzero((void*)&machine->mainMemory[128 * frame], 128);
     	return frame;
 } 
 //Revisa si hay campo en el tlb sino hace algoritmo de remplazo
 int freeTLB(){
-	if( (frame =  MapaMainMem->Find()) == -1){
+	int pagina;
+	if( (pagina =  MapaTLB->Find()) == -1){
 			if(FIFOTLB>3){
 				FIFOTLB = 0;	
 			}
-			frame = FIFOTLB;
+			pagina = FIFOTLB;
 				FIFOTLB++;
 			}
-			return frame;
+			return pagina;
 }
-
+//return the frame on loaded memory
+int loadFromFileToPageTable(const char* filename,int direccion){
+	OpenFile *executable = fileSystem->Open(filename);
+	int direccionVirtual = direccion  +  40;
+	int numeroPagina = direccion /128;
+	TranslationEntry* pageTable = currentThread->space->getPageTable();
+	
+	int freeFrame = freeIndexFrame();
+	
+	//actualizar pageTable
+	pageTable[numeroPagina].physicalPage = freeFrame;
+    pageTable[numeroPagina].valid = true;
+	if(direccion < currentThread->space->encabezadoProceso.initData.virtualAddr) 
+	pageTable[numeroPagina].readOnly = true; 
+	else
+	pageTable[numeroPagina].readOnly = false; 
+	
+	
+	//se carga directamente a la memoria
+	executable->ReadAt(&(machine->mainMemory[128 * freeFrame]),
+				   128, direccionVirtual);
+	DEBUG('M',"En memoria esta %d \n",	(machine->mainMemory[128 * freeFrame]));		   
+	return freeFrame;
+	
+	
+}
 void Nachos_PageFaultException(){
 	
 	int direccion = machine->ReadRegister(39);
+	DEBUG('k',"Se genero una excepcion para la direccion: %d \n", machine->ReadRegister(39));
 	int numeroPagina = direccion/128;
+	//printf("numeroPagina %d \n",numeroPagina);
 	TranslationEntry* paTable = currentThread->space->getPageTable();		
 	int pagina, frame;
+	int pila = (currentThread->space->getNumPages() - 8) * 128;
+	DEBUG('k',"Pila inicia %d\n", pila);
+	int codigo = 0;
+	DEBUG('k',"direccion %d\n", direccion);
 	
 	if(paTable[numeroPagina].valid == false){
 		if(paTable[numeroPagina].dirty == true){
-			 //Swap
+			DEBUG('s',"swap %d\n", numeroPagina);
+			//LISTO
+			 //Swap 
+			 //printf("cargando del swap\n");
 			frame = freeIndexFrame();
+			pagina = freeTLB();
 			swap->swapIn(numeroPagina,frame);
+			machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
+			machine->tlb[pagina].valid = true;
 			paTable[numeroPagina].physicalPage=frame;
 			paTable[numeroPagina].valid=true;
 			
-			
-		}else if(direccion > currendThread->encabezadoProceso.initData.size){//unitData o pila
-			//Hay campo en la memoria
-			//FreeTLB
+		}else if(direccion >= pila  < (pila+(8*128))){
+			//LISTO
+			 DEBUG('p',"Cargando Pila %d\n", numeroPagina);
+			//No esta en el page table y es pila o unitData
+			//printf("Pila que no esta en el page Table \n");
 			frame = freeIndexFrame();
 			pagina = freeTLB();
 			bzero((void*)&machine->mainMemory[128 * frame], 128);
+			DEBUG('M',"En memoria esta %d \n",	(machine->mainMemory[128 * frame]));	
 				paTable[numeroPagina].physicalPage=frame;
 				paTable[numeroPagina].valid=true;
+				paTable[numeroPagina].readOnly = false;
+				machine->tlb[pagina].virtualPage = numeroPagina;
 				machine->tlb[pagina].physicalPage=frame;
 				machine->tlb[pagina].valid=true;
 		}
+		else if(direccion >= codigo && direccion <pila){
+			 DEBUG('p',"Cargando Pagina de codigo o datos inicializados %d\n", numeroPagina);
+			 frame = loadFromFileToPageTable(currentThread->fileName,direccion);
+			 //LISTO
+			 //Se actualiza el tlb
+			 pagina = freeTLB();
+			 //printf);
+			 //printf("frame: %d ,paginaTLB: %d,virualPage: %d\n",frame,pagina,numeroPagina);
+			 machine->tlb[pagina].physicalPage = frame;
+			 machine->tlb[pagina].valid = true;
+			 machine->tlb[pagina].virtualPage = numeroPagina;
+			 
+		
 		}
-	}else{
+		
+		}
+		else{
+			//LISTO
+			//Esta en el PageTable
+			//Se carga al TLB
+			
 				pagina = freeTLB();
+				DEBUG('k', "Cargando al tlb del page table paginaTLB: %d,paginaVirtual: %d\n", 
+					pagina,numeroPagina);
+				DEBUG('k',"virtualPage en pagetable: %d\n",paTable[numeroPagina].virtualPage);
+				
 				machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
 				machine->tlb[pagina].physicalPage=paTable[numeroPagina].physicalPage;
 				machine->tlb[pagina].valid=true;
-				machine->tlb[pagina].readOnly=paTabla[numeroPagina].readOnly;
+				machine->tlb[pagina].readOnly=paTable[numeroPagina].readOnly;
 				machine->tlb[pagina].use=paTable[numeroPagina].use;
-				machine->tlb[pagina]-dirty=paTable[numeroPagina].dirty;
+				machine->tlb[pagina].dirty=paTable[numeroPagina].dirty;
+	}
 	}
 
 	
 
-}
+
 
 void Nachos_SemSignal(){
 	int id = machine->ReadRegister(4);
@@ -652,8 +731,8 @@ void ExceptionHandler(ExceptionType which)
           }
        		break;
 	case PageFaultException:
-		printf("PageFaultException...\n");
-		
+		//printf("PageFaultException...\n");
+		Nachos_PageFaultException();
 		break;
        default:
           printf( "Unexpected exception %d\n", which );
