@@ -514,6 +514,8 @@ int freeIndexFrame(){
 				FIFOMainMem++;
 			
 			}
+			
+	DEBUG('k',"Free Frame : %d \n",	(frame));
 			if(!FIFO){
 				return frame;
 			}
@@ -527,19 +529,15 @@ int freeIndexFrame(){
      			 machine->tlb[i].valid = false;
       		break;
     			}
-    			
-    	swap->swapOut(frame,4);
-    //Invalidar en el page table
-    for(int i = 0;i<currentThread->space->getNumPages();i++){
-		if(pageTable[i].physicalPage == frame &&
-			pageTable[i].valid == true){
-				pageTable[i].valid = false;
-				pageTable[i].physicalPage = -1;
-			}
-	}
-    
     		
+    	
+    //Invalidar en el page table
+    if(pageTable[inversedPages[frame]].dirty == true){
+		pageTable[inversedPages[frame]].valid = false;
+		swap->swapOut(frame,inversedPages[frame]);
+	}else{
     	bzero((void*)&machine->mainMemory[128 * frame], 128);
+	}
     	return frame;
 } 
 //Revisa si hay campo en el tlb sino hace algoritmo de remplazo
@@ -557,8 +555,10 @@ int freeTLB(){
 //return the frame on loaded memory
 int loadFromFileToPageTable(const char* filename,int direccion){
 	OpenFile *executable = fileSystem->Open(filename);
-	int direccionVirtual = direccion  +  40;
+	//DEBUG('M',"filename: %s",filename);
+
 	int numeroPagina = direccion /128;
+		int direccionVirtual = numeroPagina*128  +   currentThread->space->encabezadoProceso.code.inFileAddr;
 	TranslationEntry* pageTable = currentThread->space->getPageTable();
 	
 	int freeFrame = freeIndexFrame();
@@ -566,16 +566,18 @@ int loadFromFileToPageTable(const char* filename,int direccion){
 	//actualizar pageTable
 	pageTable[numeroPagina].physicalPage = freeFrame;
     pageTable[numeroPagina].valid = true;
-	if(direccion < currentThread->space->encabezadoProceso.initData.virtualAddr) 
-	pageTable[numeroPagina].readOnly = true; 
-	else
+	if(direccion < currentThread->space->encabezadoProceso.initData.virtualAddr){ 
+	pageTable[numeroPagina].readOnly = true;} 
+	else{
 	pageTable[numeroPagina].readOnly = false; 
+	}
 	
 	
+		
 	//se carga directamente a la memoria
 	executable->ReadAt(&(machine->mainMemory[128 * freeFrame]),
 				   128, direccionVirtual);
-	DEBUG('M',"En memoria esta %d \n",	(machine->mainMemory[128 * freeFrame]));		   
+	DEBUG('k',"En memoria esta %d \n",	(machine->mainMemory[128 * freeFrame]));		   
 	return freeFrame;
 	
 	
@@ -588,31 +590,33 @@ void Nachos_PageFaultException(){
 	//printf("numeroPagina %d \n",numeroPagina);
 	TranslationEntry* paTable = currentThread->space->getPageTable();		
 	int pagina, frame;
-	int pila = (currentThread->space->getNumPages() - 8) * 128;
+	int pila = ((currentThread->space->getNumPages()-8) * 128) - currentThread->space->encabezadoProceso.uninitData.size;	
 	DEBUG('k',"Pila inicia %d\n", pila);
 	int codigo = 0;
 	DEBUG('k',"direccion %d\n", direccion);
 	
 	if(paTable[numeroPagina].valid == false){
 		if(paTable[numeroPagina].dirty == true){
-			DEBUG('s',"swap %d\n", numeroPagina);
+			DEBUG('k',"swap %d\n", numeroPagina);
 			//LISTO
 			 //Swap 
 			 //printf("cargando del swap\n");
 			frame = freeIndexFrame();
+			inversedPages[frame] = numeroPagina;
 			pagina = freeTLB();
 			swap->swapIn(numeroPagina,frame);
-			machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
+			machine->tlb[pagina].virtualPage=numeroPagina;
 			machine->tlb[pagina].valid = true;
 			paTable[numeroPagina].physicalPage=frame;
 			paTable[numeroPagina].valid=true;
 			
-		}else if(direccion >= pila  < (pila+(8*128))){
+		}else if(direccion >= pila){
 			//LISTO
-			 DEBUG('p',"Cargando Pila %d\n", numeroPagina);
+			 DEBUG('k',"Cargando Pila %d\n", numeroPagina);
 			//No esta en el page table y es pila o unitData
 			//printf("Pila que no esta en el page Table \n");
 			frame = freeIndexFrame();
+			inversedPages[frame] = numeroPagina;
 			pagina = freeTLB();
 			bzero((void*)&machine->mainMemory[128 * frame], 128);
 			DEBUG('M',"En memoria esta %d \n",	(machine->mainMemory[128 * frame]));	
@@ -623,8 +627,8 @@ void Nachos_PageFaultException(){
 				machine->tlb[pagina].physicalPage=frame;
 				machine->tlb[pagina].valid=true;
 		}
-		else if(direccion >= codigo && direccion <pila){
-			 DEBUG('p',"Cargando Pagina de codigo o datos inicializados %d\n", numeroPagina);
+		else if(direccion >= codigo && direccion  < pila){
+			 DEBUG('k',"Cargando Pagina de codigo o datos inicializados %d\n", numeroPagina);
 			 frame = loadFromFileToPageTable(currentThread->fileName,direccion);
 			 //LISTO
 			 //Se actualiza el tlb
@@ -647,15 +651,19 @@ void Nachos_PageFaultException(){
 				pagina = freeTLB();
 				DEBUG('k', "Cargando al tlb del page table paginaTLB: %d,paginaVirtual: %d\n", 
 					pagina,numeroPagina);
-				DEBUG('k',"virtualPage en pagetable: %d\n",paTable[numeroPagina].virtualPage);
+				//DEBUG('k',"virtualPage en pagetable: %d\n",paTable[numeroPagina].virtualPage);
 				
-				machine->tlb[pagina].virtualPage=paTable[numeroPagina].virtualPage;
+				machine->tlb[pagina].virtualPage=numeroPagina;
 				machine->tlb[pagina].physicalPage=paTable[numeroPagina].physicalPage;
 				machine->tlb[pagina].valid=true;
 				machine->tlb[pagina].readOnly=paTable[numeroPagina].readOnly;
 				machine->tlb[pagina].use=paTable[numeroPagina].use;
 				machine->tlb[pagina].dirty=paTable[numeroPagina].dirty;
+				
+				DEBUG('k', "Pagina fisica en: %d,paginaVirtual: %d\n", 
+					paTable[numeroPagina].physicalPage,numeroPagina);
 	}
+		DEBUG('k', "///////////////////////////////////////////////////\n");
 	}
 
 	

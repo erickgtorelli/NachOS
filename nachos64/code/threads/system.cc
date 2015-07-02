@@ -36,6 +36,7 @@ SynchDisk   *synchDisk;
 #endif
 
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
+int* inversedPages;
 Machine *machine;		
 BitMap* MiMapa;	
 BitMap* MapaTLB;
@@ -193,6 +194,7 @@ Initialize(int argc, char **argv)
     MapaMainMem = new BitMap(32);
     MapSwap = new BitMap(64);
     swap = new Swap();
+    inversedPages = new int[32];
 #endif
 
 #ifdef FILESYS
@@ -232,6 +234,7 @@ Cleanup()
     delete MapaMainMem;
     delete MapSwap;
     delete swap;
+    delete inversedPages;
 #endif
 
 #ifdef FILESYS_NEEDED

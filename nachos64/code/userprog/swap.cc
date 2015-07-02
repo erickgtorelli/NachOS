@@ -17,9 +17,9 @@ bool Swap::swapIn(int page, int frame){
 
 
   int charsRead;
-  char* dest = machine->mainMemory + frame * PageSize;
+  char* dest = machine->mainMemory + frame * 128;
 
-  charsRead = swapFile->ReadAt(dest, PageSize, page * PageSize);
+  charsRead = swapFile->ReadAt(dest, 128, page * 128);
 
   bool res = (charsRead == PageSize);
   
@@ -31,17 +31,8 @@ bool Swap::swapIn(int page, int frame){
   return res;
 }
 
-bool Swap::swapOut(int frame,int NumPages){
-        
-                int page = -1;
-        for(int i = 0;i<NumPages;i++){
-                if(machine->tlb[i].physicalPage == frame)
-                 page = i;
-                }
-  if (page == -1){
-    ASSERT(false);
-    return false;
-  }
+bool Swap::swapOut(int frame,int pages){
+    int page = pages;
   
     int charsWritten;
     char* source = machine->mainMemory + frame * 128;
@@ -49,12 +40,6 @@ bool Swap::swapOut(int frame,int NumPages){
     charsWritten = swapFile->WriteAt(source, 128, page * 128);
     ASSERT(charsWritten == 128);
   
-
-  machine->tlb[page].valid = false;
-  machine->tlb[page].dirty = false;
-  machine->tlb[page].physicalPage = -1;
-
-
   return true;
 }
 

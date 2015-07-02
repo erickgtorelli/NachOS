@@ -34,6 +34,7 @@ extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 extern BitMap *controlSem;                       // conocer que espacios estÃ¡n disponibles para crear sem
 extern Semaphore **vectorSem;
+extern int* inversedPages;
 
 #ifdef USER_PROGRAM
 #include "machine.h"
@@ -43,6 +44,7 @@ extern BitMap* MapaTLB;
 extern BitMap* MapaMainMem;
 extern BitMap* MapSwap;
 extern Swap* swap;	// user program memory and registers
+
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
